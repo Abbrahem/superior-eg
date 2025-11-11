@@ -23,6 +23,7 @@ const ProductDetails = () => {
       await fetchRelatedProducts();
     };
     loadData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id]);
 
   const fetchProduct = async () => {
