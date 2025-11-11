@@ -83,13 +83,41 @@ module.exports = async (req, res) => {
     }
 
     if (req.method === 'DELETE') {
-      const pathParts = req.url.split('/');
-      const id = req.query.id || pathParts[pathParts.length - 1];
-      const promoCode = await PromoCode.findByIdAndDelete(id);
-      if (!promoCode) {
-        return res.status(404).json({ message: 'Promo code not found' });
+      // استخراج الـ ID من الـ URL بطريقة أفضل للـ Vercel
+      let id = req.query.id;
+      
+      // لو مش موجود في query، نحاول نستخرجه من الـ path
+      if (!id) {
+        const pathParts = req.url.split('/');
+        // نبحث عن الـ promocodes في المسار
+        const promoCodesIndex = pathParts.findIndex(part => part === 'promocodes' || part.includes('promocodes'));
+        if (promoCodesIndex !== -1 && pathParts[promoCodesIndex + 1]) {
+          // نأخذ الجزء اللي بعد promocodes
+          const nextPart = pathParts[promoCodesIndex + 1];
+          // نزيل أي query parameters
+          id = nextPart.split('?')[0];
+        } else {
+          // آخر محاولة: نأخذ آخر جزء من المسار
+          id = pathParts[pathParts.length - 1].split('?')[0];
+        }
       }
-      return res.status(200).json({ message: 'Promo code deleted successfully' });
+      
+      console.log('Attempting to delete promo code with ID:', id);
+      
+      if (!id || id === 'promocodes') {
+        return res.status(400).json({ message: 'Promo code ID is required' });
+      }
+      
+      try {
+        const promoCode = await PromoCode.findByIdAndDelete(id);
+        if (!promoCode) {
+          return res.status(404).json({ message: 'Promo code not found' });
+        }
+        return res.status(200).json({ message: 'Promo code deleted successfully' });
+      } catch (deleteError) {
+        console.error('Error deleting promo code:', deleteError);
+        return res.status(500).json({ message: 'Error deleting promo code', error: deleteError.message });
+      }
     }
 
     if (req.method === 'PATCH') {

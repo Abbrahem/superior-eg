@@ -361,7 +361,8 @@ const AdminDashboard = () => {
 
     if (result.isConfirmed) {
       try {
-        await axios.delete(`/api/promocodes/${promoId}`);
+        // إرسال الـ ID كـ query parameter لضمان التوافق مع Vercel
+        await axios.delete(`/api/promocodes?id=${promoId}`);
         fetchPromoCodes();
         fetchStats();
         Swal.fire({
@@ -372,9 +373,10 @@ const AdminDashboard = () => {
           color: '#ffffff'
         });
       } catch (error) {
+        console.error('Delete error:', error);
         Swal.fire({
           title: 'Error',
-          text: 'Failed to delete promo code',
+          text: error.response?.data?.message || 'Failed to delete promo code',
           icon: 'error',
           background: '#1f1f1f',
           color: '#ffffff'
