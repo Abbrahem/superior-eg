@@ -30,12 +30,20 @@ const ProductDetails = () => {
     try {
       setLoading(true);
       const response = await axios.get(`/api/products/${id}`);
-      setProduct(response.data);
-      if (response.data.colors && response.data.colors.length > 0) {
-        setSelectedColor(response.data.colors[0]);
+      const productData = response.data;
+      
+      // Ensure images array exists
+      if (!productData.images || productData.images.length === 0) {
+        productData.images = ['data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgdmlld0JveD0iMCAwIDIwMCAyMDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHJlY3Qgd2lkdGg9IjIwMCIgaGVpZ2h0PSIyMDAiIGZpbGw9IiMzMzMzMzMiLz48dGV4dCB4PSIxMDAiIHk9IjEwMCIgZmlsbD0id2hpdGUiIGZvbnQtc2l6ZT0iMTQiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGRvbWluYW50LWJhc2VsaW5lPSJtaWRkbGUiPlNVUEVSSU9SPC90ZXh0Pjwvc3ZnPg=='];
       }
-      if (response.data.sizes && response.data.sizes.length > 0) {
-        setSelectedSize(response.data.sizes[0]);
+      
+      setProduct(productData);
+      
+      if (productData.colors && productData.colors.length > 0) {
+        setSelectedColor(productData.colors[0]);
+      }
+      if (productData.sizes && productData.sizes.length > 0) {
+        setSelectedSize(productData.sizes[0]);
       }
     } catch (error) {
       console.error('Error fetching product:', error);
@@ -136,13 +144,13 @@ const ProductDetails = () => {
           <div>
             <div className="mb-4">
               <img
-                src={product.images[selectedImage]}
+                src={product.images?.[selectedImage] || product.images?.[0] || ''}
                 alt={product.name}
                 className="w-full h-96 object-cover rounded-lg"
               />
             </div>
             <div className="flex space-x-2">
-              {product.images.map((image, index) => (
+              {product.images?.map((image, index) => (
                 <img
                   key={index}
                   src={image}
@@ -169,7 +177,7 @@ const ProductDetails = () => {
                 onChange={(e) => setSelectedColor(e.target.value)}
                 className="w-full bg-gray-900 text-white px-3 py-2 rounded border border-gray-700 focus:outline-none focus:border-white"
               >
-                {product.colors.map(color => (
+                {product.colors?.map(color => (
                   <option key={color} value={color}>{color}</option>
                 ))}
               </select>
@@ -183,7 +191,7 @@ const ProductDetails = () => {
                 onChange={(e) => setSelectedSize(e.target.value)}
                 className="w-full bg-gray-900 text-white px-3 py-2 rounded border border-gray-700 focus:outline-none focus:border-white"
               >
-                {product.sizes.map(size => (
+                {product.sizes?.map(size => (
                   <option key={size} value={size}>{size}</option>
                 ))}
               </select>
@@ -280,9 +288,9 @@ const ProductDetails = () => {
             <h2 className="text-2xl font-bold mb-6">Related Products</h2>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
               {relatedProducts.map(product => (
-                <div key={product._id} className="bg-black rounded-lg overflow-hidden hover:bg-gray-900 transition-colors">
+                <a key={product._id} href={`/product/${product._id}`} className="bg-black rounded-lg overflow-hidden hover:bg-gray-900 transition-colors block">
                   <img
-                    src={product.images[0]}
+                    src={product.images?.[0] || ''}
                     alt={product.name}
                     className="w-full h-48 object-cover"
                   />
@@ -290,7 +298,7 @@ const ProductDetails = () => {
                     <h3 className="text-white font-medium text-sm mb-2">{product.name}</h3>
                     <p className="text-white font-bold">{product.price} EGP</p>
                   </div>
-                </div>
+                </a>
               ))}
             </div>
           </div>

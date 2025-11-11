@@ -16,10 +16,21 @@ module.exports = async (req, res) => {
     await connectDB();
     const admin = await authMiddleware(req);
 
-    // Extract ID from URL path or query
-    const pathParts = req.url.split('/');
-    const productId = req.query.id || pathParts[pathParts.length - 1];
-    const isToggleSoldOut = req.url.includes('toggle-sold-out');
+    // Extract ID from URL path
+    const urlPath = req.url.split('?')[0]; // Remove query params
+    const pathParts = urlPath.split('/').filter(p => p); // Remove empty parts
+    const isToggleSoldOut = urlPath.includes('toggle-sold-out');
+    
+    // Get product ID - it's the last part before 'toggle-sold-out' or the last part
+    let productId = null;
+    if (isToggleSoldOut) {
+      // URL format: /api/admin/products/{id}/toggle-sold-out
+      const idIndex = pathParts.length - 2; // ID is before 'toggle-sold-out'
+      productId = pathParts[idIndex];
+    } else {
+      // URL format: /api/admin/products/{id}
+      productId = pathParts[pathParts.length - 1];
+    }
 
     if (req.method === 'POST') {
       const { name, price, description, category, colors, sizes, images } = req.body;
@@ -73,7 +84,7 @@ module.exports = async (req, res) => {
       return res.status(200).json({ message: 'Product deleted successfully' });
     }
 
-    if (req.method === 'PATCH') {
+    if (req.method === 'PATCH' && isToggleSoldOut) {
       const product = await Product.findById(productId);
       
       if (!product) {
