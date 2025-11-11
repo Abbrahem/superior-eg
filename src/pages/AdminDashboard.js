@@ -385,6 +385,43 @@ const AdminDashboard = () => {
     }
   };
 
+  const handleDeleteOrder = async (orderId) => {
+    const result = await Swal.fire({
+      title: 'هل أنت متأكد؟',
+      text: 'سيتم حذف الطلب نهائياً',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'نعم، احذف!',
+      cancelButtonText: 'إلغاء',
+      background: '#1f1f1f',
+      color: '#ffffff'
+    });
+
+    if (result.isConfirmed) {
+      try {
+        await axios.delete(`/api/admin/orders?id=${orderId}`);
+        fetchOrders();
+        fetchStats();
+        Swal.fire({
+          title: 'تم الحذف!',
+          text: 'تم حذف الطلب بنجاح',
+          icon: 'success',
+          background: '#1f1f1f',
+          color: '#ffffff'
+        });
+      } catch (error) {
+        console.error('Delete order error:', error);
+        Swal.fire({
+          title: 'خطأ',
+          text: error.response?.data?.message || 'فشل حذف الطلب',
+          icon: 'error',
+          background: '#1f1f1f',
+          color: '#ffffff'
+        });
+      }
+    }
+  };
+
   const handleEditProduct = (product) => {
     setEditingProduct(product);
     setProductForm({
@@ -787,7 +824,7 @@ const AdminDashboard = () => {
                 return (
                   <div key={order._id} className="bg-gray-800 rounded-lg p-4 lg:p-6 border border-gray-700">
                     {/* Header with Date and Status */}
-                    <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center mb-4 space-y-2 sm:space-y-0">
+                    <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center mb-4 space-y-2 sm:space-y-0 gap-2">
                       <div className="text-xs sm:text-sm text-gray-400">
                         طلب #{order._id.slice(-8)} • {new Date(order.createdAt).toLocaleDateString('ar-EG', {
                           year: 'numeric',
@@ -797,17 +834,29 @@ const AdminDashboard = () => {
                           minute: '2-digit'
                         })}
                       </div>
-                      <span className={`px-2 sm:px-3 py-1 rounded-full text-xs font-semibold self-start sm:self-auto ${order.status === 'pending' ? 'bg-yellow-600 text-yellow-100' :
-                        order.status === 'processing' ? 'bg-blue-600 text-blue-100' :
-                          order.status === 'shipped' ? 'bg-green-600 text-green-100' :
-                            order.status === 'delivered' ? 'bg-purple-600 text-purple-100' :
-                              'bg-gray-600 text-gray-100'
-                        }`}>
-                        {order.status === 'pending' ? 'في الانتظار' :
-                          order.status === 'processing' ? 'قيد المعالجة' :
-                            order.status === 'shipped' ? 'تم الشحن' :
-                              order.status === 'delivered' ? 'تم التسليم' : 'ملغي'}
-                      </span>
+                      <div className="flex items-center gap-2 flex-wrap sm:flex-nowrap">
+                        <span className={`px-2 sm:px-3 py-1 rounded-full text-xs font-semibold ${order.status === 'pending' ? 'bg-yellow-600 text-yellow-100' :
+                          order.status === 'processing' ? 'bg-blue-600 text-blue-100' :
+                            order.status === 'shipped' ? 'bg-green-600 text-green-100' :
+                              order.status === 'delivered' ? 'bg-purple-600 text-purple-100' :
+                                'bg-gray-600 text-gray-100'
+                          }`}>
+                          {order.status === 'pending' ? 'في الانتظار' :
+                            order.status === 'processing' ? 'قيد المعالجة' :
+                              order.status === 'shipped' ? 'تم الشحن' :
+                                order.status === 'delivered' ? 'تم التسليم' : 'ملغي'}
+                        </span>
+                        <button
+                          onClick={() => handleDeleteOrder(order._id)}
+                          className="px-3 py-1 bg-red-600 hover:bg-red-700 text-white rounded text-xs font-semibold transition-colors flex items-center gap-1"
+                          title="حذف الطلب"
+                        >
+                          <svg xmlns="http://www.w3.org/2000/svg" className="h-3 w-3 sm:h-4 sm:w-4" viewBox="0 0 20 20" fill="currentColor">
+                            <path fillRule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z" clipRule="evenodd" />
+                          </svg>
+                          <span className="hidden sm:inline">حذف</span>
+                        </button>
+                      </div>
                     </div>
 
                     {/* Products Section */}
