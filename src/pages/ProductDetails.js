@@ -29,7 +29,7 @@ const ProductDetails = () => {
   const fetchProduct = async () => {
     try {
       setLoading(true);
-      const response = await axios.get(`/api/products/${id}`);
+      const response = await axios.get(`/api/products?id=${id}`);
       const productData = response.data;
       
       // Ensure images array exists
@@ -47,20 +47,14 @@ const ProductDetails = () => {
       }
     } catch (error) {
       console.error('Error fetching product:', error);
-      // Use dummy data if API fails
-      const dummyProduct = {
-        _id: id,
-        name: 'SUPERIOR Product',
-        price: 599,
-        description: 'High quality product from SUPERIOR.EG',
-        images: ['data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgdmlld0JveD0iMCAwIDIwMCAyMDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHJlY3Qgd2lkdGg9IjIwMCIgaGVpZ2h0PSIyMDAiIGZpbGw9IiMzMzMzMzMiLz48dGV4dCB4PSIxMDAiIHk9IjEwMCIgZmlsbD0id2hpdGUiIGZvbnQtc2l6ZT0iMTQiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGRvbWluYW50LWJhc2VsaW5lPSJtaWRkbGUiPlNVUEVSSU9SPC90ZXh0Pjwvc3ZnPg=='],
-        colors: ['Black', 'White'],
-        sizes: ['S', 'M', 'L', 'XL'],
-        soldOut: false
-      };
-      setProduct(dummyProduct);
-      setSelectedColor('Black');
-      setSelectedSize('M');
+      Swal.fire({
+        title: 'Error',
+        text: 'Failed to load product. Please try again.',
+        icon: 'error',
+        confirmButtonText: 'OK',
+        background: '#1f1f1f',
+        color: '#ffffff'
+      });
     } finally {
       setLoading(false);
     }
