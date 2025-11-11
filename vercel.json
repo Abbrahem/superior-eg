@@ -1,0 +1,68 @@
+{
+  "version": 2,
+  "builds": [
+    {
+      "src": "package.json",
+      "use": "@vercel/static-build",
+      "config": {
+        "distDir": "build"
+      }
+    }
+  ],
+  "routes": [
+    {
+      "src": "/api/products(.*)",
+      "dest": "/api/products.js"
+    },
+    {
+      "src": "/api/orders(.*)",
+      "dest": "/api/orders.js"
+    },
+    {
+      "src": "/api/promocodes/validate",
+      "dest": "/api/promocodes.js"
+    },
+    {
+      "src": "/api/promocodes(.*)",
+      "dest": "/api/promocodes.js"
+    },
+    {
+      "src": "/api/contact(.*)",
+      "dest": "/api/contact.js"
+    },
+    {
+      "src": "/api/admin/login",
+      "dest": "/api/admin-login.js"
+    },
+    {
+      "src": "/api/admin/products(.*)",
+      "dest": "/api/admin-products.js"
+    },
+    {
+      "src": "/api/admin/orders(.*)",
+      "dest": "/api/admin-orders.js"
+    },
+    {
+      "src": "/api/health",
+      "dest": "/api/health.js"
+    },
+    {
+      "src": "/(.*\\.(js|css|png|jpg|jpeg|gif|svg|ico|json|woff|woff2|ttf|eot)$)",
+      "dest": "/$1"
+    },
+    {
+      "src": "/(.*)",
+      "dest": "/index.html"
+    }
+  ],
+  "env": {
+    "MONGODB_URI": "@mongodb-uri",
+    "JWT_SECRET": "@jwt-secret"
+  },
+  "rewrites": [
+    {
+      "source": "/api/:path*",
+      "destination": "/api/:path*"
+    }
+  ]
+}
