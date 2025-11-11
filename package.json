@@ -1,0 +1,50 @@
+{
+  "name": "superior-store",
+  "version": "1.0.0",
+  "description": "SUPERIOR.EG E-commerce Store",
+  "private": true,
+  "dependencies": {
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-router-dom": "^6.20.0",
+    "react-scripts": "5.0.1",
+    "axios": "^1.6.2",
+    "sweetalert2": "^11.10.1",
+    "mongoose": "^7.6.0",
+    "bcryptjs": "^2.4.3",
+    "jsonwebtoken": "^9.0.2",
+    "dotenv": "^16.3.1"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "vercel-build": "react-scripts build",
+    "server": "cd server && npm run dev",
+    "dev": "concurrently \"npm run server\" \"npm start\"",
+    "install-server": "cd server && npm install"
+  },
+  "eslintConfig": {
+    "extends": [
+      "react-app"
+    ]
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  },
+  "proxy": "http://localhost:5000",
+  "keywords": ["ecommerce", "react", "nodejs", "mongodb"],
+  "author": "SUPERIOR.EG",
+  "license": "MIT"
+}
