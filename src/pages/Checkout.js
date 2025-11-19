@@ -25,7 +25,7 @@ const Checkout = () => {
     }
   }, [location]);
 
-  const shippingCost = 120;
+  const shippingCost = 40;
   const items = quickOrderProduct ? [quickOrderProduct] : cartItems;
   const subtotal = quickOrderProduct 
     ? quickOrderProduct.price * quickOrderProduct.quantity 

@@ -818,7 +818,7 @@ const AdminDashboard = () => {
                 };
 
                 const subtotal = order.total + (order.discount || 0);
-                const deliveryFee = 120;
+                const deliveryFee = 40;
                 const finalTotal = order.total + deliveryFee;
 
                 return (

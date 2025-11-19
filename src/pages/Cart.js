@@ -22,7 +22,7 @@ const Cart = () => {
     );
   }
 
-  const shippingCost = 120;
+  const shippingCost = 40;
   const subtotal = getCartTotal();
   const total = subtotal + shippingCost;
 
