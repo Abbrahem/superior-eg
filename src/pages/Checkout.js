@@ -292,9 +292,6 @@ const Checkout = () => {
 
               {/* Payment Info */}
               <div className="bg-gray-900 rounded-lg p-4 mt-6">
-                <p className="text-sm text-gray-300 mb-2">
-                  For payment visa or telda or Instapay or Vodafone Cash: +20 109 204 5566
-                </p>
                 <p className="text-sm text-gray-300">
                   For cash on delivery, please contact the number above after placing your order.
                 </p>
