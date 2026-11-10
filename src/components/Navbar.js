@@ -38,7 +38,7 @@ const Navbar = () => {
           <img 
             src="/superior.jpg" 
             alt="SUPERIOR.EG" 
-            className="h-12 w-auto object-contain"
+            className="h-20 w-auto object-contain"
             style={{
               filter: 'none',
               backgroundColor: 'transparent'
