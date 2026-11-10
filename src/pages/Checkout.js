@@ -290,10 +290,10 @@ const Checkout = () => {
                 />
               </div>
 
-              {/* Payment Info */}
+              {/* Shipping Info */}
               <div className="bg-gray-900 rounded-lg p-4 mt-6">
                 <p className="text-sm text-gray-300">
-                  For cash on delivery, please contact the number above after placing your order.
+                  Shipping takes 1-3 days
                 </p>
               </div>
 
